@@ -1,0 +1,28 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "node application with sql and inquirer",
+  "main": "bamazon.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/babco1kr/bamazon.git"
+  },
+  "keywords": [
+    "node",
+    "inquirer",
+    "mysql"
+  ],
+  "author": "Kyle Babcock",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/babco1kr/bamazon/issues"
+  },
+  "homepage": "https://github.com/babco1kr/bamazon#readme",
+  "dependencies": {
+    "inquirer": "^6.2.2",
+    "mysql": "^2.16.0"
+  }
+}
