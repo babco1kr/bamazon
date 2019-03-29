@@ -14,7 +14,7 @@ var connection = mysql.createConnection({
     if (err) throw err;
     //Begin
     begin();
-    connection.end();
+    
   });
 
   function begin() {
@@ -50,9 +50,33 @@ var connection = mysql.createConnection({
           }
       ]).then(function(answer) {
           connection.query(
-              "select `stock_quantity` where `item_id` = ?", answer.id
-          )
-
-          console.log(answer.id);
+              "SELECT * FROM `products` WHERE `item_id` = ?", answer.id, function(error, results) {
+                if (error) throw error;
+                // console.log(results[0].stock_quantity);
+                if (answer.amount > results[0].stock_quantity) {
+                    console.log("Insufficient quantity!");
+                    connection.end();
+                } else {
+                    connection.query(
+                        "UPDATE `products` SET ? WHERE ?",
+                        [
+                            {
+                                stock_quantity: results[0].stock_quantity - answer.amount
+                            },
+                            {
+                                item_id: answer.id
+                            }
+                        ],
+                        function(error) {
+                            if (error) throw error;
+                            console.log("Purchased, Your total is: " + results[0].price * answer.amount);
+                            begin();
+                        }
+                    )
+                }
+              }
+          );
+            
       })
+      
   }
