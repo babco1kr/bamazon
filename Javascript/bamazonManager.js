@@ -54,13 +54,13 @@ function view() {
         if (error) throw error;
 
         var table = new Table({
-            head: ["ID", "Name", "Department", "Price", "In Stock"],
-            colWidths: [10, 20, 20, 20, 10]
+            head: ["ID", "Name", "Department", "Price", "In Stock", "Product Sales"],
+            colWidths: [10, 20, 20, 20, 10, 20]
         });
 
         for (i = 0; i < results.length; i++) {
             table.push(
-                [results[i].item_id, results[i].product_name, results[i].department_name, results[i].price, results[i].stock_quantity]
+                [results[i].item_id, results[i].product_name, results[i].department_name, results[i].price, results[i].stock_quantity, results[i].product_sales]
             );
         }
         console.log(table.toString());

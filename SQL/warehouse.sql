@@ -17,3 +17,13 @@ values ("Samsung TV", "Electronics", 399, 15), ("PS4", "Electronics", 299, 10),
 ("Windshield Wipers", "Auto", 15, 30), ("Cat Food", "Pets", 14, 7),
 ("Cat Litter", "Pets", 17, 11), ("Wall Lamp", "Housewares", 15, 4),
 ("World of Warcraft", "Electronics", 15, 50), ("Wire Shelf", "Housewares", 35, 13);
+
+create table departments (
+    department_id int(10) not null auto_increment,
+    department_name varchar(255) not null,
+    over_head_costs int(10),
+    primary key(department_id)
+);
+
+alter products
+add product_sales int(10) default 0;
