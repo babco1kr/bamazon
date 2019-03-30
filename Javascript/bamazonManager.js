@@ -103,14 +103,11 @@ function addInventory() {
             name: "number"
         }
     ]).then(function(answer){
-        connection.query("update products set stock_quantity = stock_quantity + ? where ?", answer.number, {item_id: answer.id}, function(error, results){
+        connection.query("update products set stock_quantity = stock_quantity + " + answer.number + " where ?",  answer.id, function(error, results){
             if (error) throw error;
             console.log("Update complete");
             begin();
-        })
-        
-        
-        
+        })  
     })
 }
 
