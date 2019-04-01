@@ -10,6 +10,7 @@ var connection = mysql.createConnection({
     database: "bamazonDB"
 });
 
+// On conncecting calls function to start the application
 connection.connect(function (err) {
     if (err) throw err;
     //Begin
@@ -20,7 +21,7 @@ connection.connect(function (err) {
 
 
 function begin() {
-
+    // SQL Query to select all items from a table
     connection.query("select * from products", function (error, results) {
         if (error) throw error;
 
@@ -39,6 +40,7 @@ function begin() {
     });
 }
 
+// Prompt that asks the user what the want to do
 function toPurchase(){
     inquirer.prompt([
         {
@@ -47,6 +49,8 @@ function toPurchase(){
             choices: ["Buy", "Exit"],
             name: "decision"
         }
+
+        //Based on the users response the program either ends or calls the buy function
     ]).then(function(answer) {
         switch(answer.decision){
             case "Buy":
@@ -59,8 +63,7 @@ function toPurchase(){
     })
 }
 
-
-
+// Asks user for ID of item and quantity to buy
 function buy() {
     inquirer.prompt([
         {
@@ -73,6 +76,7 @@ function buy() {
             message: "How much would you like to buy?",
             name: "amount"
         }
+        // Selectes item from DB and makes suer there is enough to purchase
     ]).then(function (answer) {
         connection.query(
             "SELECT * FROM `products` WHERE `item_id` = ?", answer.id, function (error, results) {
@@ -82,7 +86,7 @@ function buy() {
                     console.log("Insufficient quantity!");
                     connection.end();
                 } else {
-                    console.log(results[0].product_sales);
+                    // Updates the inventory and totals the sale cost to show the user and add to the product sales
                     connection.query(
                         "UPDATE `products` SET ? WHERE ?",
                         [

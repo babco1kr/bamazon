@@ -10,6 +10,7 @@ var connection = mysql.createConnection({
     database: "bamazonDB"
 });
 
+// After connectiong function is called to begin the application
 connection.connect(function (err) {
     if (err) throw err;
     //Begin
@@ -17,7 +18,9 @@ connection.connect(function (err) {
 
 });
 
+// Function that begins the application
 function begin() {
+    // Initial prompt that asks what the user would like to do
     inquirer.prompt([
         {
             type: "list",
@@ -25,6 +28,7 @@ function begin() {
             choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"],
             name: "action"
         }
+        // Takes user response and runs function based on what they chose
     ]).then(function(answer){
         switch(answer.action) {
             case "View Products for Sale":
@@ -49,7 +53,9 @@ function begin() {
     })
 }
 
+// Will display all products and their current available information in the inventory
 function view() {
+    //SQL statement that queries all information from a table
     connection.query("select * from products", function (error, results) {
         if (error) throw error;
 
@@ -60,7 +66,7 @@ function view() {
 
         for (i = 0; i < results.length; i++) {
             table.push(
-                [results[i].item_id, results[i].product_name, results[i].department_name, results[i].price, results[i].stock_quantity, results[i].product_sales]
+                [results[i].item_id, results[i].product_name, results[i].department_name, "$" + results[i].price, results[i].stock_quantity, "$" + results[i].product_sales]
             );
         }
         console.log(table.toString());
@@ -68,7 +74,9 @@ function view() {
     });
 }
 
+// Displays all inventory with less than 5 productsin stock
 function lowInventory() {
+    //SQL statement that queries a table for items within a range
     connection.query(
         "select * from products where stock_quantity < 5", function(error, results) {
             if (error) throw error;
@@ -90,6 +98,7 @@ function lowInventory() {
     )
 }
 
+// Allows the user to add stock to a product already listed in the inventory
 function addInventory() {
     inquirer.prompt([
         {
@@ -103,7 +112,8 @@ function addInventory() {
             name: "number"
         }
     ]).then(function(answer){
-        connection.query("update products set stock_quantity = stock_quantity + " + answer.number + " where ?",  answer.id, function(error, results){
+        // SQL statement to update an item in the table
+        connection.query("update products set stock_quantity = stock_quantity + " + answer.number + " where item_id =  ?",  answer.id, function(error, results){
             if (error) throw error;
             console.log("Update complete");
             begin();
@@ -111,6 +121,7 @@ function addInventory() {
     })
 }
 
+// Allows the user to add a product to the inventory by entering all the required fields
 function addProduct() {
     inquirer.prompt([
         {
@@ -134,6 +145,7 @@ function addProduct() {
             name: "stock"
         }
     ]).then(function(answer) {
+        // SQL statement for adding a new row to a table
         connection.query(
             "insert into products set ?", 
             {
@@ -143,7 +155,7 @@ function addProduct() {
                 stock_quantity: answer.stock
             }, function(error, results) {
                 if (error) throw error;
-                console.log(results.affectedRows + "product inserted!\n");
+                console.log(results.affectedRows + " product inserted!\n");
                 begin();
             }
         )
